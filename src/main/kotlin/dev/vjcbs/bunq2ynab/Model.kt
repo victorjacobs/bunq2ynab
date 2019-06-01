@@ -12,7 +12,6 @@ data class Transaction(
     val description: String?
 ) {
     companion object {
-
         private val bunqDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         fun fromBunqPayment(payment: Payment) =

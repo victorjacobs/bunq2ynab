@@ -1,8 +1,10 @@
-package dev.vjcbs.bunq2ynab
+package dev.vjcbs.bunq2ynab.client
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import dev.vjcbs.bunq2ynab.Configuration
+import dev.vjcbs.bunq2ynab.Transaction
 import io.ktor.client.HttpClient
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JacksonSerializer
@@ -55,7 +57,7 @@ class YnabClient {
     private fun buildUrl(path: String) = "$baseUrl/$path"
 
     private suspend fun getAccountsForLastUsedBudget() =
-        httpClient.get<YnabApiResponse<AccountsResponse>>(buildUrl("budgets/last-used/accounts")).data.accounts
+        httpClient.get<YnabApiResponse<AccountsListResponse>>(buildUrl("budgets/last-used/accounts")).data.accounts
 
     private suspend fun getAccountIdMarkedAsBunqImport() =
         getAccountsForLastUsedBudget().firstOrNull {
@@ -66,9 +68,9 @@ class YnabClient {
         createTransactions(listOf(transaction))
 
     suspend fun createTransactions(transactions: List<Transaction>) =
-        httpClient.post<String>(buildUrl("budgets/last-used/transactions")) {
-            body = TransactionsRequest(transactions.map {
+        httpClient.post<YnabApiResponse<TransactionsCreateResponse>>(buildUrl("budgets/last-used/transactions")) {
+            body = TransactionsCreateRequest(transactions.map {
                 YnabTransaction.fromTransaction(it, accountId)
             })
-        }
+        }.data
 }

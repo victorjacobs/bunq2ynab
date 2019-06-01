@@ -1,9 +1,12 @@
-package dev.vjcbs.bunq2ynab
+package dev.vjcbs.bunq2ynab.rest
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import dev.vjcbs.bunq2ynab.client.BunqClient
+import dev.vjcbs.bunq2ynab.client.YnabClient
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.application.log
 import io.ktor.features.Compression
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
@@ -34,7 +37,11 @@ fun Application.main() {
 
     routing {
         get("/callback") {
-            call.respond(bunqClient.getTransactions())
+            val importResult = ynabClient.createTransactions(bunqClient.getOutgoingTransactionsForAllBankAccounts())
+
+            log.info("${importResult.transactionIds.size} imported, ${importResult.duplicateImportIds.size} duplicates")
+
+            call.respond(importResult)
         }
     }
 }

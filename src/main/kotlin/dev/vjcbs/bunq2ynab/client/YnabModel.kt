@@ -1,5 +1,6 @@
-package dev.vjcbs.bunq2ynab
+package dev.vjcbs.bunq2ynab.client
 
+import dev.vjcbs.bunq2ynab.Transaction
 import java.time.LocalDate
 
 // API structure
@@ -7,11 +8,17 @@ data class YnabApiResponse<E>(
     val data: E
 )
 
-data class AccountsResponse(
+data class AccountsListResponse(
     val accounts: List<YnabAccount>
 )
 
-data class TransactionsRequest(
+data class TransactionsCreateRequest(
+    val transactions: List<YnabTransaction>
+)
+
+data class TransactionsCreateResponse(
+    val transactionIds: List<String>,
+    val duplicateImportIds: List<String>,
     val transactions: List<YnabTransaction>
 )
 

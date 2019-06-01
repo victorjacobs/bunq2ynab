@@ -1,12 +1,15 @@
-package dev.vjcbs.bunq2ynab
+package dev.vjcbs.bunq2ynab.client
 
 import com.bunq.sdk.context.ApiContext
 import com.bunq.sdk.context.ApiEnvironmentType
 import com.bunq.sdk.context.BunqContext
 import com.bunq.sdk.model.generated.`object`.NotificationFilter
 import com.bunq.sdk.model.generated.endpoint.MonetaryAccount
+import com.bunq.sdk.model.generated.endpoint.MonetaryAccountBank
 import com.bunq.sdk.model.generated.endpoint.Payment
 import com.bunq.sdk.model.generated.endpoint.User
+import dev.vjcbs.bunq2ynab.Configuration
+import dev.vjcbs.bunq2ynab.Transaction
 import java.io.File
 
 class BunqClient {
@@ -33,9 +36,13 @@ class BunqClient {
         BunqContext.loadApiContext(apiContext)
     }
 
-    fun getTransactions() =
-        Payment.list(1279510).value.map {
-            Transaction.fromBunqPayment(it)
+    fun getOutgoingTransactionsForAllBankAccounts() =
+        MonetaryAccountBank.list().value.flatMap { bankAccount ->
+            Payment.list(bankAccount.id).value.filter { payment ->
+                payment.type != "SAVINGS" && payment.amount.value.toDouble() < 0
+            }.map {
+                Transaction.fromBunqPayment(it)
+            }
         }
 
     fun getUserInformation() = User.get().value
