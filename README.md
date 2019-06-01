@@ -1,5 +1,7 @@
 # Bunq2ynab
 
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/vjacobs/bunq2ynab.svg)](https://hub.docker.com/r/vjacobs/bunq2ynab)
+
 Synchronizes outgoing Bunq transactions to YNAB.
 
 ## Usage
