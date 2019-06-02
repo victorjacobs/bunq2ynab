@@ -5,6 +5,7 @@ val ktorVersion = "1.2.1"
 val bunqVersion = "1.10.1"
 val jaxbVersion = "2.2.11"
 val jacksonVersion = "2.9.9"
+val commonsNet = "3.6"
 
 plugins {
     application
@@ -36,6 +37,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("commons-net:commons-net:$commonsNet")
 
     implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
 }

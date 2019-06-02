@@ -3,9 +3,9 @@ package dev.vjcbs.bunq2ynab.client
 import com.bunq.sdk.context.ApiContext
 import com.bunq.sdk.context.ApiEnvironmentType
 import com.bunq.sdk.context.BunqContext
-import com.bunq.sdk.model.generated.`object`.NotificationFilter
-import com.bunq.sdk.model.generated.endpoint.MonetaryAccount
+import com.bunq.sdk.model.generated.`object`.NotificationFilterUrl
 import com.bunq.sdk.model.generated.endpoint.MonetaryAccountBank
+import com.bunq.sdk.model.generated.endpoint.NotificationFilterUrlUser
 import com.bunq.sdk.model.generated.endpoint.Payment
 import com.bunq.sdk.model.generated.endpoint.User
 import dev.vjcbs.bunq2ynab.Configuration
@@ -48,17 +48,35 @@ class BunqClient {
     fun getUserInformation() = User.get().value
 
     fun setupNotificationFilter() {
-        val notificationFilters = MonetaryAccount.get(1279510).value.monetaryAccountBank.notificationFilters
-
-        notificationFilters.forEach {
-            print(it)
+        val notificationFilters = NotificationFilterUrlUser.list().value.flatMap { notificationFilterUrlUser ->
+            notificationFilterUrlUser.notificationFilters?.filter { notificationFilterUrl ->
+                !notificationFilterUrl.notificationTarget.contains("bunq2ynab")
+            } ?: listOf()
+        } + NotificationFilterUrl().apply {
+            category = "MUTATION"
+            notificationTarget = "https://${Configuration.domainName}/bunq2ynab-callback"
         }
 
-        notificationFilters.add(NotificationFilter().apply {
-            notificationDeliveryMethod = "URL"
-            notificationTarget = "https://b.vjcbs.dev/callback"
-            category = "MUTATION"
-        })
+        NotificationFilterUrlUser.create(notificationFilters)
+//        val url = "user/${BunqContext.getUserContext().userId}/notification-filter-url"
+//
+//        val gson = BunqGsonBuilder.buildDefault().create()
+//
+//        val data = mapOf("notification_filters" to listOf(NotificationFilterUrl().apply {
+//            category = "MUTATION"
+//            notificationTarget = "https://${Configuration.domainName}/bunq2ynab-callback"
+//        }))
+//
+////        val data = mapOf("notification_filters" to listOf<NotificationFilterUrl>())
+//
+//        val serializedData = gson.toJson(data).toByteArray()
+//
+//        val client = ApiClient(BunqContext.getApiContext())
+//
+//        val createResult = String(client.post(url, serializedData, mapOf()).bodyBytes)
+//        println(createResult)
+//        val listResult = String(client.get(url, mapOf(), mapOf()).bodyBytes)
+//        println(listResult)
     }
 
 }
