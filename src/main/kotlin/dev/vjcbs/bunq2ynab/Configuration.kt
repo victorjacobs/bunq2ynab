@@ -6,9 +6,11 @@ object Configuration {
 
     val bunqApiKey = getFromEnvOrThrow("BUNQ_API_KEY")
 
-    val domainName = System.getenv("DOMAIN_NAME") ?: "test-url"
+    val domainName = getFromEnv("DOMAIN_NAME") ?: "test-url"
+
+    private fun getFromEnv(varName: String): String? = System.getenv(varName)
 
     private fun getFromEnvOrThrow(varName: String) =
-        System.getenv(varName) ?: throw IllegalStateException("$varName not set")
+        getFromEnv(varName) ?: throw IllegalStateException("$varName not set")
 
 }

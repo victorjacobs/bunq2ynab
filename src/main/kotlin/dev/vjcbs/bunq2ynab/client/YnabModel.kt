@@ -36,7 +36,7 @@ data class YnabTransaction(
     val amount: Int,
     val payeeName: String,
     val memo: String?,
-    val importId: String,
+    val importId: String?,
     val approved: Boolean = false,
     val cleared: String = "cleared"
 ) {
