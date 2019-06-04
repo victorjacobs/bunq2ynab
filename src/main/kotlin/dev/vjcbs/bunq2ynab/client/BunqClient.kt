@@ -9,9 +9,13 @@ import com.bunq.sdk.model.generated.endpoint.NotificationFilterUrlUser
 import com.bunq.sdk.model.generated.endpoint.Payment
 import dev.vjcbs.bunq2ynab.Configuration
 import dev.vjcbs.bunq2ynab.Transaction
+import dev.vjcbs.bunq2ynab.logger
 import java.io.File
+import java.io.FileNotFoundException
 
 class BunqClient {
+
+    val log = logger()
 
     private val contextFile = "bunq.conf"
 
@@ -30,7 +34,11 @@ class BunqClient {
             )
         }
 
-        apiContext.save(contextFile)
+        try {
+            apiContext.save(contextFile)
+        } catch (e: FileNotFoundException) {
+            log.warn("Unable to save API context: ${e.message}")
+        }
 
         BunqContext.loadApiContext(apiContext)
     }
@@ -65,7 +73,7 @@ class BunqClient {
 //            notificationTarget = "https://${Configuration.domainName}/bunq2ynab-callback"
 //        }))
 //
-////        val data = mapOf("notification_filters" to listOf<NotificationFilterUrl>())
+// //        val data = mapOf("notification_filters" to listOf<NotificationFilterUrl>())
 //
 //        val serializedData = gson.toJson(data).toByteArray()
 //
@@ -76,5 +84,4 @@ class BunqClient {
 //        val listResult = String(client.get(url, mapOf(), mapOf()).bodyBytes)
 //        println(listResult)
     }
-
 }
