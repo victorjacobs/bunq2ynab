@@ -7,7 +7,6 @@ import com.bunq.sdk.model.generated.`object`.NotificationFilterUrl
 import com.bunq.sdk.model.generated.endpoint.MonetaryAccountBank
 import com.bunq.sdk.model.generated.endpoint.NotificationFilterUrlUser
 import com.bunq.sdk.model.generated.endpoint.Payment
-import com.bunq.sdk.model.generated.endpoint.User
 import dev.vjcbs.bunq2ynab.Configuration
 import dev.vjcbs.bunq2ynab.Transaction
 import java.io.File
@@ -45,9 +44,8 @@ class BunqClient {
             }
         }
 
-    fun getUserInformation() = User.get().value
-
     fun setupNotificationFilter() {
+        // Currently broken because of https://github.com/bunq/sdk_java/issues/117
         val notificationFilters = NotificationFilterUrlUser.list().value.flatMap { notificationFilterUrlUser ->
             notificationFilterUrlUser.notificationFilters?.filter { notificationFilterUrl ->
                 !notificationFilterUrl.notificationTarget.contains("bunq2ynab")

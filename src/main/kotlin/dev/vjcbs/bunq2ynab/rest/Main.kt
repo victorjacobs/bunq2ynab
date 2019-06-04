@@ -20,7 +20,7 @@ import io.ktor.routing.routing
 import org.apache.commons.net.util.SubnetUtils
 import java.text.DateFormat
 
-fun Application.main() {
+fun Application.bunqCallback() {
     install(Compression)
     install(ContentNegotiation) {
         jackson {

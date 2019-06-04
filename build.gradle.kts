@@ -23,7 +23,8 @@ repositories {
 }
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
+//    mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClassName = "dev.vjcbs.bunq2ynab.MainKt"
 }
 
 dependencies {
@@ -39,7 +40,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     implementation("commons-net:commons-net:$commonsNet")
 
-    implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
+//    implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
 }
 
 tasks.withType<KotlinCompile> {

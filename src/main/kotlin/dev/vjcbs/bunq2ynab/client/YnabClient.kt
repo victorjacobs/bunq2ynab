@@ -9,8 +9,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -31,10 +29,6 @@ class YnabClient {
     private val baseUrl = "https://api.youneedabudget.com/v1"
 
     private val httpClient = HttpClient {
-        install(Logging) {
-            level = LogLevel.ALL
-        }
-
         install(JsonFeature) {
             serializer = JacksonSerializer {
                 disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -63,9 +57,6 @@ class YnabClient {
         getAccountsForLastUsedBudget().firstOrNull {
             it.note?.contains("#bunqimport") ?: false
         }?.id ?: throw IllegalStateException("No account marked with #bunqimport")
-
-    suspend fun createTransaction(transaction: Transaction) =
-        createTransactions(listOf(transaction))
 
     suspend fun createTransactions(transactions: List<Transaction>) =
         httpClient.post<YnabApiResponse<TransactionsCreateResponse>>(buildUrl("budgets/last-used/transactions")) {
