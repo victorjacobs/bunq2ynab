@@ -3,6 +3,7 @@ package dev.vjcbs.bunq2ynab.client
 import com.bunq.sdk.context.ApiContext
 import com.bunq.sdk.context.ApiEnvironmentType
 import com.bunq.sdk.context.BunqContext
+import com.bunq.sdk.exception.BunqException
 import com.bunq.sdk.model.generated.`object`.NotificationFilterUrl
 import com.bunq.sdk.model.generated.endpoint.MonetaryAccountBank
 import com.bunq.sdk.model.generated.endpoint.NotificationFilterUrlUser
@@ -11,7 +12,6 @@ import dev.vjcbs.bunq2ynab.Configuration
 import dev.vjcbs.bunq2ynab.Transaction
 import dev.vjcbs.bunq2ynab.logger
 import java.io.File
-import java.io.FileNotFoundException
 
 class BunqClient {
 
@@ -36,7 +36,7 @@ class BunqClient {
 
         try {
             apiContext.save(contextFile)
-        } catch (e: FileNotFoundException) {
+        } catch (e: BunqException) {
             log.warn("Unable to save API context: ${e.message}")
         }
 
