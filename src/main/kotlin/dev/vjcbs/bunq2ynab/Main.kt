@@ -11,7 +11,7 @@ fun main() = runBlocking {
     while (true) {
         try {
             syncService.syncLastOutGoingTransactions()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             log.error("Error syncing", e)
         }
 
