@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val logbackVersion = "1.2.3"
 val ktorVersion = "1.2.1"
-val bunqVersion = "1.10.1"
+val bunqVersion = "1.10.16"
 val jaxbVersion = "2.2.11"
 val jacksonVersion = "2.9.9"
 val commonsNet = "3.6"
