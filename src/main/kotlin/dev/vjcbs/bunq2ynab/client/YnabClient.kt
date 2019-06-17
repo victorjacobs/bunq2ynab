@@ -20,7 +20,7 @@ import java.text.DateFormat
 
 class YnabClient {
 
-    val accountId by lazy {
+    private val accountId by lazy {
         runBlocking {
             getAccountIdMarkedAsBunqImport()
         }

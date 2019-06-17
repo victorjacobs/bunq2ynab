@@ -15,7 +15,7 @@ import java.io.File
 
 class BunqClient {
 
-    val log = logger()
+    private val log = logger()
 
     private val contextFile = "bunq.conf"
 
