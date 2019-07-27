@@ -3,7 +3,7 @@ FROM gradle:jdk11 AS builder
 COPY . /src
 WORKDIR /src
 
-RUN useradd -u 1104 bunq2ynab
+RUN useradd -u 1106 bunq2ynab
 RUN gradle shadowJar
 
 
