@@ -55,5 +55,7 @@ gradle-app.setting
 
 .idea/
 
-bunq.conf
+bunq*.conf
 out/
+
+bunq2ynab.yaml

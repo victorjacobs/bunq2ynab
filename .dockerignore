@@ -1,3 +1,4 @@
-bunq.conf
+bunq*.conf
+bunq2ynab.yaml
 out/
 build/
