@@ -3,8 +3,8 @@ package dev.vjcbs.bunq2ynab.client
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import dev.vjcbs.bunq2ynab.Configuration
 import dev.vjcbs.bunq2ynab.Transaction
+import dev.vjcbs.bunq2ynab.YnabConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JacksonSerializer
@@ -18,8 +18,9 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import java.text.DateFormat
 
-class YnabClient {
-
+class YnabClient(
+    private val config: YnabConfig
+) {
     private val accountId by lazy {
         runBlocking {
             getAccountIdMarkedAsBunqImport()
@@ -40,7 +41,7 @@ class YnabClient {
 
         defaultRequest {
             header("User-Agent", "dev.vjcbs.bunq2ynab/1.0")
-            header("Authorization", "Bearer ${Configuration.ynabApiKey}")
+            header("Authorization", "Bearer ${config.apiKey}")
 
             if (method != HttpMethod.Get) {
                 contentType(ContentType.Application.Json)
@@ -50,16 +51,16 @@ class YnabClient {
 
     private fun buildUrl(path: String) = "$baseUrl/$path"
 
-    private suspend fun getAccountsForLastUsedBudget() =
-        httpClient.get<YnabApiResponse<AccountsListResponse>>(buildUrl("budgets/last-used/accounts")).data.accounts
+    private suspend fun getAccountsForBudget() =
+        httpClient.get<YnabApiResponse<AccountsListResponse>>(buildUrl("budgets/${config.budgetId}/accounts")).data.accounts
 
     private suspend fun getAccountIdMarkedAsBunqImport() =
-        getAccountsForLastUsedBudget().firstOrNull {
+        getAccountsForBudget().firstOrNull {
             it.note?.contains("#bunqimport") ?: false
         }?.id ?: throw IllegalStateException("No account marked with #bunqimport")
 
     suspend fun createTransactions(transactions: List<Transaction>) =
-        httpClient.post<YnabApiResponse<TransactionsCreateResponse>>(buildUrl("budgets/last-used/transactions")) {
+        httpClient.post<YnabApiResponse<TransactionsCreateResponse>>(buildUrl("budgets/${config.budgetId}/transactions")) {
             body = TransactionsCreateRequest(transactions.map {
                 YnabTransaction.fromTransaction(it, accountId)
             })

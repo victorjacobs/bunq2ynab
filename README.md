@@ -7,5 +7,6 @@ Synchronizes outgoing Bunq transactions to YNAB.
 ## Usage
 
 1. Add `#bunqimport` to the note of the account in YNAB you want to import transactions into
-2. `docker run -e YNAB_API_KEY=<ynabApiKey> -e BUNQ_API_KEY=<bunqApiKey> vjacobs/bunq2ynab`
-3. Every minute, new transactions are imported into YNAB
+2. Create `bunq2ynab.yaml` configuration file. Example [here](bunq2ynab.sample.yaml)
+3. `docker run -v $(pwd)/bunq2ynab.yaml:/app/bunq2ynab.yaml vjacobs/bunq2ynab`
+4. Every minute, new transactions are imported into YNAB

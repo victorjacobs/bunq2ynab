@@ -1,0 +1,8 @@
+importers:
+  - bunq:
+      apiKey: <Bunq api key>
+      accountId: <Bunq account id>
+    ynab:
+      apiKey: <YNAB api key>
+      budgetId: <YNAB budget id>
+    syncAllTransactions: true         # Whether or not to sync all transactions, not only outgoing. Defaults to false
